@@ -1,7 +1,7 @@
 InlineManual - Ruby bindings
 ============================
 
-*Warning: This gem is under heavy development! Check [TODO](https://github.com/InlineManual/inlinemanual-php/blob/master/README.md) for the overview of the current state.*
+*Warning: This gem is under heavy development! Check [TODO](https://github.com/InlineManual/inlinemanual-ruby/blob/master/TODO.md) for the overview of the current state.*
 
 Official Ruby gem for the [Inline Manual API](https:://inlinemanual.com) with Rails integration.
 
