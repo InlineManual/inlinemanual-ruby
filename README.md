@@ -67,6 +67,8 @@ InlineManual.verify_ssl_certs = false
 
 Developed with love by fine folks of [Inline Manual](https://inlinemanual.com)
 
+Some parts of the code (especially the API exception handling) were inspired by the Stripe Ruby bindings.
+
 ## License
 
 The MIT License
