@@ -26,7 +26,7 @@ module InlineManual
     def self.retrieve(path)
       check_api_key
       request = ApiRequest.new(path, authorization_params)
-      request.send
+      request.deliver
     end
 
     def self.authorization_params

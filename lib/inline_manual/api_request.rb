@@ -1,8 +1,7 @@
 module InlineManual
   class ApiRequest
 
-    attr_accessor :path, :params, :method
-    attr_reader :request, :response
+    attr_reader :path, :params, :method, :request, :response
 
     def initialize(path, params = {}, method = :get)
       @path = path
@@ -11,28 +10,23 @@ module InlineManual
     end
 
     def url
-      InlineManual.api_base + "/" + @path
+      @url ||= InlineManual.api_base + "/" + @path
     end
 
-    # Returns JSON body of the response if request succeed.
-    def send
-      uri = URI.parse(url)
-      http = Net::HTTP.new(uri.host, uri.port)
+    def uri
+      @uri ||= set_uri(url, @params)
+    end
 
-      if InlineManual.verify_ssl_certs
-        http.use_ssl = true
-        http.verify_mode = OpenSSL::SSL::VERIFY_PEER
-        http.ca_file = InlineManual.ssl_bundle_path
-      end
-
-      uri.query = @params.map{ |k,v| "#{CGI.escape(k.to_s)}=#{CGI.escape(v.to_s)}" }.join('&') if @params.any?
-
-      @request = Net::HTTP::Get.new(uri.request_uri, headers)
-      @response = http.request(@request)
+    # Send request to API and returns JSON body of the response if the request succeed.
+    def deliver
+      @http = set_http_client(uri)
+      @request = build_request(uri)
+      @response = @http.request(@request)
 
       handle_api_error(@response.code, @response.body) unless @response.is_a?(Net::HTTPSuccess)
 
       MultiJson.load(@response.body, :symbolize_names => true)
+
     rescue SocketError => e
       raise InlineManual::ApiConnectionError.new("Can't connect to #{uri.host}. Socket errors: #{e.message}.")
     rescue MultiJson::DecodeError
@@ -40,6 +34,26 @@ module InlineManual
     end
 
   protected
+
+    def build_request(uri, method = :get)
+      Net::HTTP::Get.new(uri.request_uri, headers)
+    end
+
+    def set_http_client(uri)
+      Net::HTTP.new(uri.host, uri.port).tap { |http|
+        if InlineManual.verify_ssl_certs
+          http.use_ssl = true
+          http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+          http.ca_file = InlineManual.ssl_bundle_path
+        end
+      }
+    end
+
+    def set_uri(url, params = {})
+      URI.parse(url).tap { |uri|
+        uri.query = params.map{ |k,v| "#{CGI.escape(k.to_s)}=#{CGI.escape(v.to_s)}" }.join('&') if params.any?
+      }
+    end
 
     def user_agent
       {
