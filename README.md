@@ -1,7 +1,7 @@
 InlineManual - Ruby bindings
 ============================
 
-*Warning: This gem is under heavy development!*
+*Warning: This gem is under heavy development! Check [TODO](https://github.com/InlineManual/inlinemanual-php/blob/master/README.md) for the overview of the current state.*
 
 Official Ruby gem for the [Inline Manual API](https:://inlinemanual.com) with Rails integration.
 
@@ -35,7 +35,6 @@ Example usage:
 ```ruby
 require 'inlinemanual'
 
-# For testing:
 InlineManual.site_api_key = 'YOUR_SITE_API_KEY'
 
 begin
@@ -56,6 +55,13 @@ end
 4. Make sure that your changes pass the tests (`bundle exec rake test`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
+For testing purposes you can also change the base path of the API and disable SSL verification if needed:
+
+```ruby
+InlineManual.api_base = 'http://localhost:3000/api'
+InlineManual.verify_ssl_certs = false
+```
 
 ## Credits
 
