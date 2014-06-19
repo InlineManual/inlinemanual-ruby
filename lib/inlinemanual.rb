@@ -24,7 +24,7 @@ module InlineManual
   @site_api_key = ''
   @user_api_key = ''
   @api_version = nil
-  @ssl_bundle_path  = File.dirname(__FILE__) + '/data/GeoTrustGlobalCA.crt'
+  @ssl_bundle_path  = File.dirname(__FILE__) + '/data/ca-bundle.crt'
   @verify_ssl_certs = true
 
   class << self
